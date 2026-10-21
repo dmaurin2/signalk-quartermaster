@@ -22,9 +22,21 @@ Throughout this guide, replace `PI_ADDRESS` with that address. Port `3000` is th
 - Back up the Signal K configuration and Quartermaster data, if present.
 - Use the Linux account running Signal K.
 - Configure the vessel name and UUID in Signal K.
-- Obtain the release candidate plugin package from the project maintainer.
+- Download the release candidate package using the steps below.
 
-No public npm installation command is provided until publication is confirmed.
+This release is distributed through GitHub. Installation through the Signal K App Store is pending npm publication.
+
+## Download the release candidate package
+
+Open [release v1.0.0-rc.1](https://github.com/dmaurin2/signalk-quartermaster/releases/tag/v1.0.0-rc.1). Under Assets download `signalk-quartermaster-1.0.0-rc.1.tgz` and `SHA256SUMS`. The release appears after its automated build and package checks succeed. If it is absent, check the repository Actions page.
+
+Transfer both files to your Signal K host. From the download directory, verify:
+
+```bash
+sha256sum -c SHA256SUMS
+```
+
+Expect `signalk-quartermaster-1.0.0-rc.1.tgz: OK`. Use the .tgz asset, not GitHub's automatically generated Source code archive.
 
 ## Install the release candidate package
 

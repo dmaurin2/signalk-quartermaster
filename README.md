@@ -6,7 +6,7 @@ Keep equipment records, photographs, manuals, parts information and maintenance 
 
 ## Release status
 
-**1.0.0-rc.1 is a release candidate.** The Pi 4 reference installation and hosted five-lookup AI trial have passed live tests. This repository is being prepared for publication; it does not yet provide a published npm release or a complete customer disk image.
+**1.0.0-rc.1 is a release candidate.** The Pi 4 reference installation and hosted five-lookup AI trial have passed live tests. The source is available here. Download the installable package from the [release page](https://github.com/dmaurin2/signalk-quartermaster/releases/tag/v1.0.0-rc.1) after its build completes. npm publication and a complete customer disk image are still pending.
 
 Confirmed live on the reference Pi 4:
 
@@ -68,4 +68,4 @@ Project website: [openoceanos.com](https://openoceanos.com)
 
 ## License
 
-The release candidate declares the MIT license. The plugin source and its license file will accompany the code release.
+Released under the [MIT license](LICENSE).

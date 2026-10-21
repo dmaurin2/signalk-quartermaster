@@ -1,0 +1,124 @@
+name: Build and publish release candidate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'tests/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+      - 'database-schema.sql'
+      - 'sqlite-compat.js'
+      - 'print-asset-label.js'
+      - '.github/workflows/release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.package.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: npm test
+      - name: Package and inspect
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm pack --json > pack-result.json
+          node <<'NODE'
+          const fs = require('node:fs');
+          const pkg = require('./package.json');
+          const packed = JSON.parse(fs.readFileSync('pack-result.json', 'utf8'))[0];
+          if (!/^[0-9]+\.[0-9]+\.[0-9]+-rc\.[0-9]+$/.test(pkg.version)) {
+            throw new Error('This workflow only publishes release candidates');
+          }
+          const paths = new Set(packed.files.map(f => f.path));
+          for (const name of ['dist/index.js', 'database-schema.sql', 'sqlite-compat.js',
+            'print-asset-label.js', 'LICENSE', 'README.md', 'docs/INSTALLATION.md']) {
+            if (!paths.has(name)) throw new Error('Missing package file: ' + name);
+          }
+          for (const name of paths) {
+            if (/node_modules|(^|\/)\.env|\.token$|\.db($|-)|(^|\/)storage\//.test(name)) {
+              throw new Error('Unexpected private or runtime file: ' + name);
+            }
+          }
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'version=' + pkg.version + '\n');
+          NODE
+          sha256sum signalk-quartermaster-*.tgz > SHA256SUMS
+      - name: Check installation of packed plugin
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_path="$PWD/$(node -p "JSON.parse(require('fs').readFileSync('pack-result.json','utf8'))[0].filename")"
+          install_dir="$RUNNER_TEMP/quartermaster-package-check"
+          npm install --prefix "$install_dir" --ignore-scripts --no-audit --no-fund "$package_path"
+          QM_INSTALL_DIR="$install_dir" node <<'NODE'
+          const path = require('node:path');
+          const pluginPath = path.join(process.env.QM_INSTALL_DIR, 'node_modules/signalk-quartermaster');
+          const factory = require(pluginPath);
+          if (typeof factory !== 'function') throw new Error('Invalid plugin entry point');
+          const plugin = factory({debug(){},error(){},setPluginStatus(){}});
+          if (plugin.id !== 'signalk-quartermaster') throw new Error('Unexpected plugin ID');
+          for (const key of ['start', 'stop', 'schema', 'registerWithRouter']) {
+            if (typeof plugin[key] !== 'function') throw new Error('Missing lifecycle method: ' + key);
+          }
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quartermaster-package
+          path: |
+            signalk-quartermaster-*.tgz
+            SHA256SUMS
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: quartermaster-package
+      - name: Publish GitHub prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_VERSION: ${{ needs.build.outputs.version }}
+          RELEASE_COMMIT: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="v$RELEASE_VERSION"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; preserving its original assets."
+            exit 0
+          fi
+          cat > release-notes.md <<'NOTES'
+          Quartermaster-Aboard by Open Ocean OS, for an existing Signal K server.
+
+          Requires Node.js 24 or later. Download the .tgz package and SHA256SUMS below.
+          Follow docs/INSTALLATION.md in this release's source for installation and backup instructions.
+
+          Pi 4 installation, records, photographs, PDFs and hosted five-lookup AI trial passed live tests.
+          Pi 5, physical printing/scanning, maintenance and full restore acceptance remain pending.
+          AI access is optional and requires an owner key or separately issued trial activation.
+          This is a prerelease, not a finished customer disk image. npm/App Store publication is separate.
+          NOTES
+          gh release create "$tag" signalk-quartermaster-*.tgz SHA256SUMS \
+            --target "$RELEASE_COMMIT" --prerelease \
+            --title "Quartermaster-Aboard $RELEASE_VERSION" --notes-file release-notes.md

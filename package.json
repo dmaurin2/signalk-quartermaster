@@ -11,13 +11,16 @@
     "database-schema.sql",
     "print-asset-label.js",
     "LICENSE",
-    "sqlite-compat.js"
+    "sqlite-compat.js",
+    "docs",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
     "clean": "rm -rf dist",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "test": "node --test tests/plugin.test.cjs"
   },
   "keywords": [
     "signalk-node-server-plugin",
@@ -45,5 +48,13 @@
     "openai": "^7.12.1",
     "qrcode": "^1.5.4",
     "sharp": "^0.35.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dmaurin2/signalk-quartermaster.git"
+  },
+  "homepage": "https://github.com/dmaurin2/signalk-quartermaster#readme",
+  "bugs": {
+    "url": "https://github.com/dmaurin2/signalk-quartermaster/issues"
   }
 }
