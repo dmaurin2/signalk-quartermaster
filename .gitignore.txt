@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+dist/
+
+# Private configuration
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Databases and equipment files
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+storage/
+plugin-config-data/
+
+# Backups and archives
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
+# Temporary files
+*.log
+*.tsbuildinfo

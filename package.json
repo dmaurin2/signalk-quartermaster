@@ -1,0 +1,49 @@
+{
+  "name": "signalk-quartermaster",
+  "version": "1.0.0-rc.1",
+  "description": "Quartermaster Aboard asset management plugin for Signal K",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "public",
+    "README.md",
+    "database-schema.sql",
+    "print-asset-label.js",
+    "LICENSE",
+    "sqlite-compat.js"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prepack": "npm run build"
+  },
+  "keywords": [
+    "signalk-node-server-plugin",
+    "signalk-webapp",
+    "signalk",
+    "marine",
+    "asset-management",
+    "signalk-category-utility"
+  ],
+  "license": "MIT",
+  "signalk": {
+    "displayName": "Quartermaster Aboard"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "devDependencies": {
+    "@signalk/server-api": "^2.31.1",
+    "@types/multer": "^2.2.0",
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  },
+  "dependencies": {
+    "multer": "^2.4.0",
+    "openai": "^7.12.1",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.5"
+  }
+}
