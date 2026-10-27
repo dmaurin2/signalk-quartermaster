@@ -6,7 +6,7 @@ Keep equipment records, photographs, manuals, parts information and maintenance 
 
 ## Release status
 
-**1.0.0-rc.1 is a release candidate.** The Pi 4 reference installation and hosted five-lookup AI trial have passed live tests. The source is available here. Download the installable package from the [release page](https://github.com/dmaurin2/signalk-quartermaster/releases/tag/v1.0.0-rc.1) after its build completes. npm publication and a complete customer disk image are still pending.
+**1.0.0-rc.1 is a release candidate.** The Pi 4 reference installation and hosted five-lookup AI trial have passed live tests. The source and [release package](https://github.com/dmaurin2/signalk-quartermaster/releases/tag/v1.0.0-rc.1) are available here. Version 1.0.0-rc.1 is also published on [npm](https://www.npmjs.com/package/signalk-quartermaster). Signal K App Store discovery and installation still need verification. A complete customer disk image remains pending.
 
 Confirmed live on the reference Pi 4:
 
