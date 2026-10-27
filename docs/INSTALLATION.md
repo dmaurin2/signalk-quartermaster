@@ -24,11 +24,11 @@ Throughout this guide, replace `PI_ADDRESS` with that address. Port `3000` is th
 - Configure the vessel name and UUID in Signal K.
 - Download the release candidate package using the steps below.
 
-Version 1.0.0-rc.1 is published on npm and available from GitHub. Discovery and installation through the Signal K App Store still need live verification.
+Version 1.0.0-rc.2 is published on npm and available from GitHub. Discovery and installation through the Signal K App Store still need live verification.
 
 ## Download the release candidate package
 
-Open [release v1.0.0-rc.1](https://github.com/dmaurin2/signalk-quartermaster/releases/tag/v1.0.0-rc.1). Under Assets download `signalk-quartermaster-1.0.0-rc.1.tgz` and `SHA256SUMS`. The release appears after its automated build and package checks succeed. If it is absent, check the repository Actions page.
+Open [release v1.0.0-rc.2](https://github.com/dmaurin2/signalk-quartermaster/releases/tag/v1.0.0-rc.2). Under Assets download `signalk-quartermaster-1.0.0-rc.2.tgz` and `SHA256SUMS`. The release appears after its automated build and package checks succeed. If it is absent, check the repository Actions page.
 
 Transfer both files to your Signal K host. From the download directory, verify:
 
@@ -36,7 +36,7 @@ Transfer both files to your Signal K host. From the download directory, verify:
 sha256sum -c SHA256SUMS
 ```
 
-Expect `signalk-quartermaster-1.0.0-rc.1.tgz: OK`. Use the .tgz asset, not GitHub's automatically generated Source code archive.
+Expect `signalk-quartermaster-1.0.0-rc.2.tgz: OK`. Use the .tgz asset, not GitHub's automatically generated Source code archive.
 
 ## Install the release candidate package
 
@@ -44,7 +44,7 @@ Run these commands as the Signal K service's Linux user, from its configuration 
 
 ```bash
 cd /path/to/your/signalk-config
-npm install --ignore-scripts /absolute/path/signalk-quartermaster-1.0.0-rc.1.tgz
+npm install --ignore-scripts /absolute/path/signalk-quartermaster-1.0.0-rc.2.tgz
 ```
 
 Use the installable `.tgz` inside the test bundle, not the outer bundle archive. Do not use sudo for this local npm install.
