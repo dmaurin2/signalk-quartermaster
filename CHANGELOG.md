@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.0-rc.2
+
+- Add the Quartermaster Aboard overview image to the beginning of the package description.
+- Update package documentation; plugin behavior is unchanged.
+
 ## 1.0.0-rc.1
 
 Release candidate under test; published to npm. Signal K App Store discovery and installation remain to be verified.
