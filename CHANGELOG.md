@@ -2,7 +2,7 @@
 
 ## 1.0.0-rc.1
 
-Release candidate under test; npm publication is not yet confirmed.
+Release candidate under test; published to npm. Signal K App Store discovery and installation remain to be verified.
 
 ### Included
 
