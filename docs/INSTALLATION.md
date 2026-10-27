@@ -24,7 +24,7 @@ Throughout this guide, replace `PI_ADDRESS` with that address. Port `3000` is th
 - Configure the vessel name and UUID in Signal K.
 - Download the release candidate package using the steps below.
 
-This release is distributed through GitHub. Installation through the Signal K App Store is pending npm publication.
+Version 1.0.0-rc.1 is published on npm and available from GitHub. Discovery and installation through the Signal K App Store still need live verification.
 
 ## Download the release candidate package
 
