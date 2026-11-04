@@ -1,6 +1,6 @@
 {
   "name": "signalk-quartermaster",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0-rc.3",
   "description": "Quartermaster Aboard asset management plugin for Signal K",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -44,7 +44,7 @@
     "typescript": "^5.9.0"
   },
   "dependencies": {
-    "multer": "^2.4.0",
+    "multer": "^2.5.0",
     "openai": "^7.12.1",
     "qrcode": "^1.5.4",
     "sharp": "^0.35.5"

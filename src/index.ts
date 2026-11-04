@@ -1,3 +1,4 @@
+import { registerLibrary } from './library'
 
 
 import type { Plugin, ServerAPI } from '@signalk/server-api'
@@ -228,6 +229,7 @@ module.exports = (app: ServerAPI): Plugin => {
     },
 
     registerWithRouter: (router) => {
+      registerLibrary(router, () => ({ dataDir, databaseFile: currentSettings.databaseFile || 'quartermaster.db' }))
       ;(router as any).use((_req: any, res: any, next: any) => {
         ready.then(() => next()).catch(() => res.status(503).json({
           ok: false, error: 'Quartermaster database is not ready. Check the server log and vessel configuration.'
@@ -6589,6 +6591,7 @@ module.exports = (app: ServerAPI): Plugin => {
                           <div class="section">
                             <h3>Documents</h3>
 
+                            <p><a href="/plugins/signalk-quartermaster/library?asset=${encodeURIComponent(asset.qr_code)}">Open Library documents linked to this equipment</a></p>
                             <div id="documents-list">
                               <p class="future">
                                 Loading documents...
@@ -8836,12 +8839,24 @@ module.exports = (app: ServerAPI): Plugin => {
                             }
 
                             const result = await response.json();
+                            const libraryResponse = await fetch(
+                              '/plugins/signalk-quartermaster/library?format=json&asset=' +
+                              '${encodeURIComponent(asset.qr_code)}',
+                              { credentials: 'same-origin' }
+                            );
+                            if (!libraryResponse.ok) {
+                              throw new Error('Unable to load Library documents');
+                            }
+                            const libraryResult = await libraryResponse.json();
+                            const documents = [
+                              ...(result.documents || []),
+                              ...libraryResult.documents
+                            ];
 
                             container.textContent = '';
 
                             if (
-                              !result.documents ||
-                              result.documents.length === 0
+                              documents.length === 0
                             ) {
                               const empty =
                                 document.createElement('p');
@@ -8854,7 +8869,7 @@ module.exports = (app: ServerAPI): Plugin => {
                               return;
                             }
 
-                            result.documents.forEach(
+                            documents.forEach(
                               (documentRecord) => {
                                 const item =
                                   document.createElement('p');
@@ -8862,7 +8877,10 @@ module.exports = (app: ServerAPI): Plugin => {
                                 const link =
                                   document.createElement('a');
 
-                                link.href =
+                                link.href = documentRecord.library
+                                  ? '/plugins/signalk-quartermaster/library/' +
+                                    encodeURIComponent(documentRecord.id) + '/file'
+                                  :
                                   '/plugins/signalk-quartermaster' +
                                   '/asset/' +
                                   '${encodeURIComponent(asset.qr_code)}' +
@@ -8903,7 +8921,12 @@ module.exports = (app: ServerAPI): Plugin => {
                                   item.appendChild(description);
                                 }
 
-   const replaceButton =
+   if (documentRecord.library) {
+                                  container.appendChild(item);
+                                  return;
+                                }
+
+                                const replaceButton =
                                   document.createElement(
                                     'button'
                                   );

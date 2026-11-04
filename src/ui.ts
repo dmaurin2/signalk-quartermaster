@@ -146,6 +146,7 @@ export function renderHome(
           <h2 id="quick-title">Quick links</h2>
           <p>Open the pages used during a survey and for everyday records.</p>
           <nav class="button-list" aria-label="Quartermaster pages">
+            <a class="button secondary" href="${base}/library">Document Library</a>
             <a class="button secondary" href="${base}/intakes">Photo intakes</a>
             <a class="button secondary" href="${base}/intakes/new">Take equipment photos</a>
             <a class="button secondary" href="${base}/equipment/manual">Manual entry</a>
