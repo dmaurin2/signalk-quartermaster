@@ -37,22 +37,55 @@ const styles = `
   .masthead a { color: #fff; }
   main { padding: 18px; }
   .intro { margin: 0 0 20px; color: #405b6a; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-    gap: 16px; }
+
+  /* Primary action cards */
+  .primary-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .action-card {
+    background: white;
+    border: 1px solid #d6e0e6;
+    border-radius: 14px;
+    padding: 24px 22px;
+    box-shadow: 0 2px 10px #17324d0c;
+    display: flex;
+    flex-direction: column;
+  }
+  .action-card.recommended {
+    border-color: #14628a;
+    box-shadow: 0 3px 14px #14628a22;
+  }
+  .action-card h2 {
+    margin: 0 0 8px;
+    font-size: 1.35rem;
+  }
+  .action-card p {
+    margin: 0 0 18px;
+    color: #405b6a;
+    flex: 1;
+  }
+  .action-card .badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    background: #eaf4f9;
+    color: #14628a;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+
   .card { background: white; border: 1px solid #d6e0e6;
     border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px #17324d0a; }
   .card h2, .card h3 { margin: 0 0 12px; }
   .card p { margin: 0 0 15px; }
   .section-title { margin: 28px 0 12px; font-size: 22px; }
-  .choice { display: flex; align-items: flex-start; gap: 12px; padding: 12px;
-    margin: 8px 0; border: 1px solid #c9d6df; border-radius: 8px;
-    cursor: pointer; }
-  .choice:has(input:checked) { border-color: #14628a; background: #eaf4f9; }
-  .choice input { margin-top: 4px; accent-color: #14628a; width: 18px; height: 18px; }
-  .choice strong, .choice small { display: block; }
-  .choice small { color: #526779; margin-top: 3px; }
-  fieldset { padding: 0; border: 0; margin: 0 0 14px; }
-  legend { font-size: 21px; font-weight: 700; margin-bottom: 8px; }
+
   .button { display: inline-flex; align-items: center; justify-content: center;
     min-height: 48px; padding: 11px 18px; border: 0; border-radius: 8px;
     background: #17324d; color: #fff; text-decoration: none; font: inherit;
@@ -61,6 +94,20 @@ const styles = `
   .button.secondary { background: #e6f0f5; color: #17324d; }
   .button.secondary:hover, .button.secondary:focus-visible { background: #d3e7f0; }
   .button-list { display: flex; flex-wrap: wrap; gap: 9px; }
+
+  .secondary-links {
+    margin: 0 0 28px;
+    padding: 16px 18px;
+    background: #eef3f6;
+    border-radius: 10px;
+  }
+  .secondary-links p {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: #526779;
+    font-weight: 600;
+  }
+
   .search { display: flex; flex-wrap: wrap; gap: 9px; margin: 12px 0 16px; }
   input[type="search"], input[type="text"], textarea { width: 100%;
     border: 1px solid #aebfca; border-radius: 8px; padding: 12px;
@@ -79,8 +126,10 @@ const styles = `
   .back { display: inline-block; margin-bottom: 16px; font-weight: 700; }
   footer { color: #526779; font-size: 14px; padding: 18px 0 30px; }
   :focus-visible { outline: 3px solid #f0a538; outline-offset: 2px; }
-  @media (max-width: 560px) { .button-list .button, .search .button,
-    form > .button { width: 100%; } }
+  @media (max-width: 560px) {
+    .button-list .button, .search .button, form > .button,
+    .action-card .button { width: 100%; }
+  }
 `
 
 function documentHtml(title: string, body: string): string {
@@ -125,36 +174,34 @@ export function renderHome(
     </div></header>
     <main class="wrap">
       ${vesselPanel}
-      <p class="intro">Find an equipment record, add an item, or open a saved intake.</p>
+      <p class="intro">Add new equipment or open an existing record.</p>
       ${error ? `<p class="error" role="alert">${escapeHtml(error)}</p>` : ''}
-      <div class="grid">
-        <section class="card" aria-labelledby="add-title">
-          <h2 id="add-title">Add equipment</h2>
-          <form action="${base}/equipment/start" method="get">
-            <fieldset><legend>Choose how to start</legend>
-              <label class="choice"><input type="radio" name="method" value="photo" checked>
-                <span><strong>Take photographs</strong>
-                <small>Photograph equipment, nameplate, and location for AI review.</small></span></label>
-              <label class="choice"><input type="radio" name="method" value="manual">
-                <span><strong>Enter details manually</strong>
-                <small>Create a record without photographs or AI.</small></span></label>
-            </fieldset>
-            <button class="button" type="submit">Continue</button>
-          </form>
-        </section>
-        <section class="card" aria-labelledby="quick-title">
-          <h2 id="quick-title">Quick links</h2>
-          <p>Open the pages used during a survey and for everyday records.</p>
-          <nav class="button-list" aria-label="Quartermaster pages">
-            <a class="button secondary" href="${base}/library">Document Library</a>
-            <a class="button secondary" href="${base}/intakes">Photo intakes</a>
-            <a class="button secondary" href="${base}/intakes/new">Take equipment photos</a>
-            <a class="button secondary" href="${base}/equipment/manual">Manual entry</a>
-            <a class="button secondary" href="${base}/health">System status</a>
-            <a class="button secondary" href="/admin/#/dashboard">Signal K</a>
-          </nav>
-        </section>
-      </div>
+
+      <section class="primary-actions" aria-label="Add equipment">
+        <article class="action-card recommended">
+          <span class="badge">Recommended</span>
+          <h2>Identify with photos</h2>
+          <p>Take three photos (equipment, nameplate, and location). AI proposes the details for you to review and approve.</p>
+          <a class="button" href="${base}/intakes/new">Start photo intake</a>
+        </article>
+
+        <article class="action-card">
+          <h2>Enter manually</h2>
+          <p>Create a complete equipment record without photographs or AI assistance.</p>
+          <a class="button secondary" href="${base}/equipment/manual">Manual entry</a>
+        </article>
+      </section>
+
+      <nav class="secondary-links" aria-label="Other tools">
+        <p>Also available</p>
+        <div class="button-list">
+          <a class="button secondary" href="${base}/intakes">Photo intakes</a>
+          <a class="button secondary" href="${base}/library">Document Library</a>
+          <a class="button secondary" href="${base}/health">System status</a>
+          <a class="button secondary" href="/admin/#/dashboard">Signal K</a>
+        </div>
+      </nav>
+
       <section id="equipment" aria-labelledby="equipment-title">
         <h2 class="section-title" id="equipment-title">Equipment (${assets.length})</h2>
         <div class="card search"><label for="asset-search" class="muted">Find equipment</label>
@@ -162,7 +209,7 @@ export function renderHome(
         </div>
         <div class="assets" id="asset-list">${assetCards}</div>
         <p class="muted" id="no-results" hidden>No matching equipment.</p>
-        ${assets.length === 0 ? '<p class="muted">No equipment records yet. Use Add equipment to begin.</p>' : ''}
+        ${assets.length === 0 ? '<p class="muted">No equipment records yet. Use one of the options above to begin.</p>' : ''}
       </section>
       <footer>Manuals, service history, parts, and label printing are available from each equipment record.</footer>
     </main>
@@ -213,3 +260,4 @@ export function renderManualForm(error = '', values: Record<string, string> = {}
       </section>
     </main>`)
 }
+
