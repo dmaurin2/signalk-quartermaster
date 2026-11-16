@@ -125,36 +125,19 @@ export function renderHome(
     </div></header>
     <main class="wrap">
       ${vesselPanel}
-      <p class="intro">Find an equipment record, add an item, or open a saved intake.</p>
       ${error ? `<p class="error" role="alert">${escapeHtml(error)}</p>` : ''}
-      <div class="grid">
-        <section class="card" aria-labelledby="add-title">
-          <h2 id="add-title">Add equipment</h2>
-          <form action="${base}/equipment/start" method="get">
-            <fieldset><legend>Choose how to start</legend>
-              <label class="choice"><input type="radio" name="method" value="photo" checked>
-                <span><strong>Take photographs</strong>
-                <small>Photograph equipment, nameplate, and location for AI review.</small></span></label>
-              <label class="choice"><input type="radio" name="method" value="manual">
-                <span><strong>Enter details manually</strong>
-                <small>Create a record without photographs or AI.</small></span></label>
-            </fieldset>
-            <button class="button" type="submit">Continue</button>
-          </form>
-        </section>
-        <section class="card" aria-labelledby="quick-title">
-          <h2 id="quick-title">Quick links</h2>
-          <p>Open the pages used during a survey and for everyday records.</p>
-          <nav class="button-list" aria-label="Quartermaster pages">
-            <a class="button secondary" href="${base}/library">Document Library</a>
-            <a class="button secondary" href="${base}/intakes">Photo intakes</a>
-            <a class="button secondary" href="${base}/intakes/new">Take equipment photos</a>
-            <a class="button secondary" href="${base}/equipment/manual">Manual entry</a>
-            <a class="button secondary" href="${base}/health">System status</a>
-            <a class="button secondary" href="/admin/#/dashboard">Signal K</a>
-          </nav>
-        </section>
-      </div>
+      <section aria-labelledby="add-title">
+        <h2 id="add-title" style="margin:0 0 8px;font-size:1rem">Add equipment</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <a class="button" href="${base}/intakes/new">Identify with photos</a>
+          <a class="button secondary" href="${base}/equipment/manual">Enter manually</a>
+        </div>
+      </section>
+      <nav aria-label="Quartermaster records"
+           style="display:flex;flex-wrap:wrap;gap:0 16px;margin-top:8px">
+        <a href="${base}/library" style="display:inline-flex;align-items:center;min-height:44px">Document Library</a>
+        <a href="${base}/intakes" style="display:inline-flex;align-items:center;min-height:44px">Saved photo intakes</a>
+      </nav>
       <section id="equipment" aria-labelledby="equipment-title">
         <h2 class="section-title" id="equipment-title">Equipment (${assets.length})</h2>
         <div class="card search"><label for="asset-search" class="muted">Find equipment</label>
@@ -164,7 +147,13 @@ export function renderHome(
         <p class="muted" id="no-results" hidden>No matching equipment.</p>
         ${assets.length === 0 ? '<p class="muted">No equipment records yet. Use Add equipment to begin.</p>' : ''}
       </section>
-      <footer>Manuals, service history, parts, and label printing are available from each equipment record.</footer>
+      <footer>
+        <div>Manuals, service history, parts, and label printing are available from each equipment record.</div>
+        <nav aria-label="System tools" style="display:flex;flex-wrap:wrap;gap:0 16px">
+          <a href="${base}/health" style="display:inline-flex;align-items:center;min-height:44px">System status</a>
+          <a href="/admin/#/dashboard" style="display:inline-flex;align-items:center;min-height:44px">Signal K</a>
+        </nav>
+      </footer>
     </main>
     <script>
       const search = document.getElementById('asset-search');
